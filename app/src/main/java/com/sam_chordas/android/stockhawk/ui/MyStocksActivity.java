@@ -86,6 +86,11 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
               @Override public void onItemClick(View v, int position) {
                 //TODO:
                 // do something on item click
+                Intent lineGraphIntent = new Intent(mContext, com.sam_chordas.android.stockhawk.ui.DetailGraphActivity.class);
+                mCursor.moveToPosition(position);
+                String test = mCursor.getString(mCursor.getColumnIndex(getResources().getString(R.string.symbol)));
+                lineGraphIntent.putExtra(getResources().getString(R.string.symbol), mCursor.getString(mCursor.getColumnIndex(getResources().getString(R.string.symbol))));
+                mContext.startActivity(lineGraphIntent);
               }
             }));
     recyclerView.setAdapter(mCursorAdapter);
