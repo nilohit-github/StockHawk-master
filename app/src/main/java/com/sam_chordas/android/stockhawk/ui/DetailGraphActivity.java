@@ -7,9 +7,13 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.sam_chordas.android.stockhawk.model.QuoteDserielizer;
-import com.sam_chordas.android.stockhawk.model.Result;
+import com.sam_chordas.android.stockhawk.model.Stock;
 import com.sam_chordas.android.stockhawk.retrofit_interface.StockHistory;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,8 +28,10 @@ public class DetailGraphActivity extends AppCompatActivity {
 
     public static String quote_symbol;
     private static final String BASE_URL = "https://query.yahooapis.com/";
-    private Call<Result> mStockHistory;
-    private Result result;
+    private Call<List<Stock>> mStockHistory;
+    private Stock stock;
+    private List<Stock> mStockItemList;
+    private int dataSetSize;
 
 
     @Override
@@ -39,34 +45,43 @@ public class DetailGraphActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(quote_symbol);
 
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Result.class, new QuoteDserielizer())
+                    .registerTypeAdapter(Stock.class, new QuoteDserielizer())
                     .create();
+            Type listType = new TypeToken<List<Stock>>() {}.getType();
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().registerTypeAdapter(
+                            listType, new QuoteDserielizer()).create()))
                     .build();
 
             StockHistory stockHistory = retrofit.create(StockHistory.class);
             String startDate = "2015-06-10";
             String endDate = "2016-06-10";
-            String q = "select * from yahoo.finance.historicaldata where symbol = \"" + quote_symbol + "\" and startDate = \"" + endDate + "\" and endDate = \"" + startDate + "\"";
-            String diagnostics = "true";
-            String env = "store://datatables.org/alltableswithkeys";
-            String format = "json";
-            mStockHistory = stockHistory.getHistoricalData(q, diagnostics, env, format);
-            mStockHistory.enqueue(new Callback<Result>() {
+
+            String query = "select * from yahoo.finance.historicaldata where symbol = \'" + quote_symbol + "\' and startDate = \'" + startDate + "\' and endDate = \'" + endDate + "\'";
+            mStockHistory = stockHistory.getHistoricalData(query);
+            mStockHistory.enqueue(new Callback<List<Stock>>() {
                 @Override
-                public void onResponse(Call<Result> call, Response<Result> response) {
-                    // Get result Repo from response.body()
-                    result = response.body();
-                    result.toString();
-                    Log.v("resultsss value",result.toString());
+                public void onResponse(Call<List<Stock>> call, Response<List<Stock>> response) {
+
+                    Log.d("response.raw", response.raw().toString());
+
+                    Log.d("result",call.toString());
+                    Log.d("result:::",response.toString());
+                    mStockItemList = response.body();
+                        dataSetSize = mStockItemList.size();
+
+
+
+
                 }
 
                 @Override
-                public void onFailure(Call<Result> call, Throwable t) {
-                    Log.d("MyStocksActivity", t.getMessage());
+                public void onFailure(Call<List<Stock>> call, Throwable t) {
+
                 }
+
+
             });
         }
 

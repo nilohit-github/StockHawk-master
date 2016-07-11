@@ -1,53 +1,31 @@
 package com.sam_chordas.android.stockhawk.model;
 
-import com.google.gson.JsonArray;
+import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.sam_chordas.android.stockhawk.model.Result;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jhani on 7/8/2016.
  */
-public class QuoteDserielizer implements JsonDeserializer<JsonArray> {
+public class QuoteDserielizer implements JsonDeserializer<List<Stock>>  {
 
-    ArrayList<Result.StockItem> ResultArray = new ArrayList<>();
+    List<Stock> stockArrayList = new ArrayList<>();
     @Override
-    public  Result deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        JsonObject queryObject = json
-                .getAsJsonObject()
-                .get("query")
-                .getAsJsonObject();
+    public List<Stock> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
-        JsonElement quoteElement = queryObject
-                .get("results")
-                .getAsJsonObject()
-                .get("quote");
-        JsonArray quoteArray = quoteElement.getAsJsonArray();
+        return new Gson().fromJson(
 
-        for (int i = 0; i < quoteArray.size(); i++) {
-            final JsonElement stockItemElement = quoteArray.get(i);
-
-            final JsonElement dateElement = stockItemElement.getAsJsonObject().get("Date");
-            final JsonElement closeElement = stockItemElement.getAsJsonObject().get("Close");
-            final String date = dateElement.getAsString();
-            final String close = closeElement.getAsString();
-
-            final Result.StockItem  stockItem = new Result.StockItem(date,close);
-            ResultArray.add(stockItem);
-
-        }
-
-
-    Result result = new Result();
-    result.setStockItems(ResultArray);
-
-
-        return result;
+                json
+                        .getAsJsonObject().get("query")
+                        .getAsJsonObject().get("results")
+                        .getAsJsonObject() .get("quote")
+                        .getAsJsonArray(), typeOfT);
     }
+
 }

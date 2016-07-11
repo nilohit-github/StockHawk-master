@@ -1,30 +1,15 @@
 package com.sam_chordas.android.stockhawk.model;
 
-import java.util.List;
-
 /**
  * Created by jhani on 7/8/2016.
  */
-public class Result {
+public class Stock {
 
 
-     List<StockItem> mStockItems;
+           private String Date;
+           private String Close;
 
-
-        public List<StockItem> getStockItems() {
-            return mStockItems;
-        }
-
-        public void setStockItems(List<StockItem> stockItems) {
-            mStockItems = stockItems;
-        }
-
-        public static class StockItem {
-
-            String Date;
-            String Close;
-
-            public StockItem(String date, String close) {
+            public Stock(String date, String close) {
                 Date = date;
                 Close = close;
             }
@@ -47,4 +32,3 @@ public class Result {
 
 
         }
-    }
