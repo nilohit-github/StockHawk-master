@@ -93,8 +93,8 @@ public class WidgetRemoteViewService extends RemoteViewsService {
                 }
 
                 final Intent fillInIntent = new Intent();
-               // fillInIntent.putExtra(getResources().getString(R.string.string_symbol), cursor.getString(cursor.getColumnIndex(QuoteColumns.SYMBOL)));
-               // views.setOnClickFillInIntent(R.id.widget_list, fillInIntent);
+                fillInIntent.putExtra(getResources().getString(R.string.string_symbol), cursor.getString(cursor.getColumnIndex(QuoteColumns.SYMBOL)));
+                views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
 
                 return views;
             }

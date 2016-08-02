@@ -4,14 +4,19 @@ import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.sam_chordas.android.stockhawk.R;
+import com.sam_chordas.android.stockhawk.data.QuoteColumns;
+import com.sam_chordas.android.stockhawk.service.StockTaskService;
+import com.sam_chordas.android.stockhawk.ui.DetailGraphActivity;
 import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
 
 /**
@@ -19,6 +24,8 @@ import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
  */
 
 public class StockAppWidgetProvider extends AppWidgetProvider {
+
+    public static final String DETAIL_ACTION = "com.sam_chordas.android.stockhawk.DETAIL_ACTION";
 
 
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -43,7 +50,7 @@ public class StockAppWidgetProvider extends AppWidgetProvider {
             } else {
                 setRemoteAdapterV11(context, views);
             }
-            Intent clickIntentTemplate = new Intent(context, MyStocksActivity.class);
+            Intent clickIntentTemplate = new Intent(context, DetailGraphActivity.class);
             PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
                     .addNextIntentWithParentStack(clickIntentTemplate)
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -53,6 +60,7 @@ public class StockAppWidgetProvider extends AppWidgetProvider {
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_list);
         }
 
 
@@ -67,6 +75,24 @@ public class StockAppWidgetProvider extends AppWidgetProvider {
     private void setRemoteAdapterV11(Context context, @NonNull final RemoteViews views) {
         views.setRemoteAdapter(0, R.id.widget_list,
                 new Intent(context, WidgetRemoteViewService.class));
+    }
+
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        if (StockTaskService.ACTION_DATA_UPDATED.equals(intent.getAction())) {
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
+                    new ComponentName(context, getClass()));
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
+        }
+        if(intent.getAction().equals(StockAppWidgetProvider.DETAIL_ACTION)){
+            int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                    AppWidgetManager.INVALID_APPWIDGET_ID);
+            Log.e("Symbol", intent.getStringExtra(QuoteColumns.SYMBOL));
+            context.startActivity(intent);
+        }
     }
 }
 
