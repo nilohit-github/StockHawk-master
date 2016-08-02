@@ -6,29 +6,29 @@ package com.sam_chordas.android.stockhawk.model;
 public class Stock {
 
 
-           private String Date;
-           private String Close;
+    private String Date;
+    private String Close;
 
-            public Stock(String date, String close) {
-                Date = date;
-                Close = close;
-            }
+    public Stock(String date, String close) {
+        Date = date;
+        Close = close;
+    }
 
-            public String getDate() {
-                return Date;
-            }
+    public String getDate() {
+        return Date;
+    }
 
-            public void setDate(String date) {
-                this.Date = date;
-            }
+    public void setDate(String date) {
+        this.Date = date;
+    }
 
-            public String getClose() {
-                return Close;
-            }
+    public String getClose() {
+        return Close;
+    }
 
-            public void setClose(String close) {
-                this.Close = close;
-            }
+    public void setClose(String close) {
+        this.Close = close;
+    }
 
 
-        }
+}

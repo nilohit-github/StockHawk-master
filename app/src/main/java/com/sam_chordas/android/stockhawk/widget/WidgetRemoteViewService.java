@@ -59,7 +59,7 @@ public class WidgetRemoteViewService extends RemoteViewsService {
                 // get the data from the database
                 cursor = getContentResolver().query(
                         QuoteProvider.Quotes.CONTENT_URI,
-                       QUOTE_COLUMNS,
+                        QUOTE_COLUMNS,
                         QuoteColumns.ISCURRENT + " = ?",
                         new String[]{"1"},
                         null);
@@ -123,7 +123,8 @@ public class WidgetRemoteViewService extends RemoteViewsService {
             }
 
             @Override
-            public RemoteViews getLoadingView(){ return  null;
+            public RemoteViews getLoadingView() {
+                return null;
             }
 
             @Override

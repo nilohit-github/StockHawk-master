@@ -50,7 +50,7 @@ public class DetailGraphActivity extends AppCompatActivity {
         setContentView(R.layout.activity_line_graph);
         lineChart = (LineChart) findViewById(R.id.linechart);
         Intent intent = getIntent();
-        if (intent != null ) {
+        if (intent != null) {
             quote_symbol = intent.getStringExtra("symbol");
             Log.v("symbol", quote_symbol);
             getSupportActionBar().setTitle(quote_symbol);
@@ -58,7 +58,8 @@ public class DetailGraphActivity extends AppCompatActivity {
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Stock.class, new QuoteDserielizer())
                     .create();
-            Type listType = new TypeToken<List<Stock>>() {}.getType();
+            Type listType = new TypeToken<List<Stock>>() {
+            }.getType();
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().registerTypeAdapter(
@@ -67,7 +68,7 @@ public class DetailGraphActivity extends AppCompatActivity {
 
             StockHistory stockHistory = retrofit.create(StockHistory.class);
             //String startDate = "2016-06-3";
-             String endDate = Utils.getFormattedDate(System.currentTimeMillis());
+            String endDate = Utils.getFormattedDate(System.currentTimeMillis());
             Date date = new Date();
             String startDate = Utils.get1MonthBackDate(date);
 
@@ -84,13 +85,13 @@ public class DetailGraphActivity extends AppCompatActivity {
                     mStockItemList = response.body();
                     dataSetSize = mStockItemList.size();
 
-                        drawChart();
+                    drawChart();
 
                 }
 
                 @Override
                 public void onFailure(Call<List<Stock>> call, Throwable t) {
-                    Log.d("error in the response",t.toString());
+                    Log.d("error in the response", t.toString());
                     t.printStackTrace();
 
                 }

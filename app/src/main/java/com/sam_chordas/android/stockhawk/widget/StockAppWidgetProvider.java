@@ -32,7 +32,7 @@ public class StockAppWidgetProvider extends AppWidgetProvider {
         final int N = appWidgetIds.length;
 
         // Perform this loop procedure for each App Widget that belongs to this provider
-        for (int i=0; i<N; i++) {
+        for (int i = 0; i < N; i++) {
             int appWidgetId = appWidgetIds[i];
 
             // Create an Intent to launch ExampleActivity
@@ -87,7 +87,7 @@ public class StockAppWidgetProvider extends AppWidgetProvider {
                     new ComponentName(context, getClass()));
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
         }
-        if(intent.getAction().equals(StockAppWidgetProvider.DETAIL_ACTION)){
+        if (intent.getAction().equals(StockAppWidgetProvider.DETAIL_ACTION)) {
             int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
             Log.e("Symbol", intent.getStringExtra(QuoteColumns.SYMBOL));

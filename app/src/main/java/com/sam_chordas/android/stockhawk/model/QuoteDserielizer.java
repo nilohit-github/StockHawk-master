@@ -13,9 +13,10 @@ import java.util.List;
 /**
  * Created by jhani on 7/8/2016.
  */
-public class QuoteDserielizer implements JsonDeserializer<List<Stock>>  {
+public class QuoteDserielizer implements JsonDeserializer<List<Stock>> {
 
     List<Stock> stockArrayList = new ArrayList<>();
+
     @Override
     public List<Stock> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
@@ -24,7 +25,7 @@ public class QuoteDserielizer implements JsonDeserializer<List<Stock>>  {
                 json
                         .getAsJsonObject().get("query")
                         .getAsJsonObject().get("results")
-                        .getAsJsonObject() .get("quote")
+                        .getAsJsonObject().get("quote")
                         .getAsJsonArray(), typeOfT);
     }
 
